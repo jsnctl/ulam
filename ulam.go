@@ -1,17 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/png"
+	"math/big"
 	"os"
 )
 
 func main() {
-	width := 500
-	height := 500
+	width := 1000
+	height := 1000
 	topLeft := image.Point{X: 0, Y: 0}
 	bottomRight := image.Point{X: width, Y: height}
 	centre := image.Point{X: width / 2, Y: height / 2}
@@ -26,13 +26,20 @@ func main() {
 		isPrime: false,
 	}
 
-	for i := 0; i < 200; i++ {
-		cursor.moveCursor(i)
-		img.Set(cursor.x, cursor.y, color.Black)
+	moves := GenerateMoves(width * height)
+	for i, move := range moves {
+		cursor.moveCursor(i+1, move)
+		if IsPrime(i) {
+			img.Set(cursor.x, cursor.y, color.Black)
+		}
 	}
 
 	f, _ := os.Create("output.png")
 	png.Encode(f, img)
+}
+
+func IsPrime(number int) bool {
+	return big.NewInt(int64(number)).ProbablyPrime(4)
 }
 
 type Cursor struct {
@@ -42,9 +49,35 @@ type Cursor struct {
 	isPrime bool
 }
 
+func (c *Cursor) moveCursor(number int, move Move) {
+	c.number = number
+	c.x += move.xDelta
+	c.y += move.yDelta
+}
+
 type Move struct {
 	xDelta int
 	yDelta int
+}
+
+type DirectionLoop struct {
+	Directions []string
+	cursor int
+}
+
+func NewDirectionLoop() *DirectionLoop {
+	loop := &DirectionLoop{}
+	loop.Directions = []string{"right", "up", "left", "down"}
+	return loop
+}
+
+func (loop *DirectionLoop) GetNextDirection() string {
+	value := loop.Directions[loop.cursor]
+	loop.cursor += 1
+	if loop.cursor > 3 {
+		loop.cursor = 0
+	}
+	return value
 }
 
 var directions = map[string]Move{
@@ -59,29 +92,34 @@ func GenerateSeries(steps int) []int {
 	total := 0
 	for step := 1; step < steps+1; step++ {
 		diff := (step + 1) / 2
-		total += diff
 
-		if total >= steps {
-			series = append(series, step-diff)
+		if total+diff >= steps {
+			series = append(series, steps-total)
 			break
 		}
 
+		total += diff
 		series = append(series, diff)
 	}
 	return series
 }
 
-func GenerateMoves(steps int) []string {
-	result := make([]string, 0)
-	for step := 0; step < steps; step++ {
-		result = append(result, "right")
+func GenerateMoves(steps int) []Move {
+	series := GenerateSeries(steps)
+	result := make([]Move, 0)
+	loop := NewDirectionLoop()
+	for _, step := range series {
+		chunk := GenerateMoveChunk(step, loop.GetNextDirection())
+		result = append(result, chunk...)
 	}
-	fmt.Println(result)
-	return []string{"right"}
+	return result
 }
 
-func (c *Cursor) moveCursor(number int) {
-	c.number = number
-	c.x += 1
-	c.y += 1
+func GenerateMoveChunk(size int, value string) []Move {
+	chunk := make([]Move, size)
+	for i := 0; i < size; i++ {
+		chunk[i] = directions[value]
+	}
+	return chunk
 }
+
