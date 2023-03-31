@@ -29,7 +29,7 @@ func main() {
 	moves := GenerateMoves(width * height)
 	for i, move := range moves {
 		cursor.moveCursor(i+1, move)
-		if IsPrime(i) {
+		if cursor.isPrime {
 			img.Set(cursor.x, cursor.y, color.Black)
 		}
 	}
@@ -38,7 +38,7 @@ func main() {
 	png.Encode(f, img)
 }
 
-func IsPrime(number int) bool {
+func PrimalityCheck(number int) bool {
 	return big.NewInt(int64(number)).ProbablyPrime(4)
 }
 
@@ -51,6 +51,7 @@ type Cursor struct {
 
 func (c *Cursor) moveCursor(number int, move Move) {
 	c.number = number
+	c.isPrime = PrimalityCheck(c.number)
 	c.x += move.xDelta
 	c.y += move.yDelta
 }
