@@ -1,69 +1,17 @@
 package main
 
 import (
-	"image"
 	"image/color"
-	"image/draw"
-	"image/png"
 	"math/big"
-	"os"
 )
-
-func main() {
-	width := 1000
-	height := 1000
-	topLeft := image.Point{X: 0, Y: 0}
-	bottomRight := image.Point{X: width, Y: height}
-	centre := image.Point{X: width / 2, Y: height / 2}
-
-	img := image.NewRGBA(image.Rectangle{Min: topLeft, Max: bottomRight})
-	draw.Draw(img, img.Bounds(), &image.Uniform{C: color.RGBA{R: 255, G: 255, B: 255, A: 255}}, image.ZP, draw.Src)
-
-	cursor := Cursor{
-		number:  0,
-		x:       centre.X,
-		y:       centre.Y,
-		isPrime: false,
-	}
-
-	moves := GenerateMoves(width * height)
-	for i, move := range moves {
-		cursor.moveCursor(i+1, move)
-		if cursor.isPrime {
-			img.Set(cursor.x, cursor.y, color.Black)
-		}
-	}
-
-	f, _ := os.Create("output.png")
-	png.Encode(f, img)
-}
 
 func PrimalityCheck(number int) bool {
 	return big.NewInt(int64(number)).ProbablyPrime(4)
 }
 
-type Cursor struct {
-	number  int
-	x       int
-	y       int
-	isPrime bool
-}
-
-func (c *Cursor) moveCursor(number int, move Move) {
-	c.number = number
-	c.isPrime = PrimalityCheck(c.number)
-	c.x += move.xDelta
-	c.y += move.yDelta
-}
-
-type Move struct {
-	xDelta int
-	yDelta int
-}
-
 type DirectionLoop struct {
 	Directions []string
-	cursor int
+	cursor     int
 }
 
 func NewDirectionLoop() *DirectionLoop {
@@ -79,6 +27,23 @@ func (loop *DirectionLoop) GetNextDirection() string {
 		loop.cursor = 0
 	}
 	return value
+}
+
+func (board *Board) UlamSpiral() {
+	cursor := Cursor{
+		number:  0,
+		x:       board.centre.X,
+		y:       board.centre.Y,
+		isPrime: false,
+	}
+
+	moves := GenerateMoves(board.width * board.height)
+	for i, move := range moves {
+		cursor.moveCursor(i+1, move)
+		if cursor.isPrime {
+			board.img.Set(cursor.x, cursor.y, color.Black)
+		}
+	}
 }
 
 var directions = map[string]Move{
@@ -123,4 +88,3 @@ func GenerateMoveChunk(size int, value string) []Move {
 	}
 	return chunk
 }
-
