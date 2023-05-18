@@ -31,6 +31,12 @@ type Cursor struct {
 	x       int
 	y       int
 	isPrime bool
+	colour  color.Color
+	facing  string
+}
+
+func (board *Board) getColour(x int, y int) color.Color {
+	return board.img.At(x, y)
 }
 
 func (c *Cursor) moveCursor(number int, move Move) {
@@ -51,12 +57,12 @@ func main() {
 	draw.Draw(
 		board.img,
 		board.img.Bounds(),
-		&image.Uniform{C: color.RGBA{R: 255, G: 255, B: 255, A: 255}},
+		&image.Uniform{C: color.White},
 		image.ZP,
 		draw.Src,
 	)
 
-	board.UlamSpiral()
+	board.LangtonAnt(20000)
 
 	f, _ := os.Create("output.png")
 	png.Encode(f, board.img)
