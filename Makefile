@@ -2,9 +2,18 @@ build:
 	go build
 
 test:
-	go test
+	go test ./...
 
 
-display: build test
+all: build test
 	./ulam
+	open output.png
+
+
+ulam: build test
+	./ulam ulam
+	open output.png
+
+langton: build test
+	./ulam langton
 	open output.png

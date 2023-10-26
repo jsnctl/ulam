@@ -22,8 +22,21 @@ func main() {
 	)
 
 	s := strategy.Strategy{Board: b}
-	s.LangtonAnt(1000)
-	s.UlamSpiral()
+
+	var which string
+	if len(os.Args) > 1 {
+		which = os.Args[1]
+	}
+
+	switch which {
+	case "ulam":
+		s.UlamSpiral()
+	case "langton":
+		s.LangtonAnt(1e6)
+	case "":
+		s.UlamSpiral()
+		s.LangtonAnt(1e5)
+	}
 
 	f, _ := os.Create("output.png")
 	png.Encode(f, s.Board.Img)
