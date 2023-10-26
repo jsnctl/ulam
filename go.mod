@@ -1,4 +1,4 @@
-module ulam
+module github.com/jsnctl/ulam
 
 go 1.19
 
