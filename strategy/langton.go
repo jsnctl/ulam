@@ -1,6 +1,7 @@
-package main
+package strategy
 
 import (
+	"github.com/jsnctl/ulam/board"
 	"image/color"
 )
 
@@ -32,24 +33,24 @@ func compareColors(left color.Color, right color.Color) bool {
 	return false
 }
 
-func (board *Board) LangtonAnt(steps int) {
-	cursor := Cursor{
-		number: 0,
-		x:      board.centre.X,
-		y:      board.centre.Y,
-		facing: "up",
+func (s *Strategy) LangtonAnt(steps int) {
+	cursor := board.Cursor{
+		Number: 0,
+		X:      s.Board.Centre.X,
+		Y:      s.Board.Centre.Y,
+		Facing: "up",
 	}
 
 	for i := 0; i < steps; i++ {
-		cursor.colour = board.getColour(cursor.x, cursor.y)
-		if compareColors(cursor.colour, color.White) {
-			cursor.facing = turnRight(cursor.facing)
-			board.img.Set(cursor.x, cursor.y, color.Black)
-			cursor.moveCursor(i+1, directions[cursor.facing])
+		cursor.Colour = s.Board.GetColour(cursor.X, cursor.Y)
+		if compareColors(cursor.Colour, color.White) {
+			cursor.Facing = turnRight(cursor.Facing)
+			s.Board.Img.Set(cursor.X, cursor.Y, color.Black)
+			cursor.MoveCursor(i+1, board.Directions[cursor.Facing])
 		} else {
-			cursor.facing = turnLeft(cursor.facing)
-			board.img.Set(cursor.x, cursor.y, color.White)
-			cursor.moveCursor(i+1, directions[cursor.facing])
+			cursor.Facing = turnLeft(cursor.Facing)
+			s.Board.Img.Set(cursor.X, cursor.Y, color.White)
+			cursor.MoveCursor(i+1, board.Directions[cursor.Facing])
 		}
 	}
 }

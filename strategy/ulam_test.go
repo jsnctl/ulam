@@ -1,6 +1,7 @@
-package main
+package strategy
 
 import (
+	"github.com/jsnctl/ulam/board"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -12,9 +13,9 @@ func TestGenerateSeries(t *testing.T) {
 }
 
 func TestGenerateMoveChunk(t *testing.T) {
-	assert.Equal(t, []Move{{0, -1}}, GenerateMoveChunk(1, "up"))
-	assert.Equal(t, []Move{{-1, 0}, {-1, 0}}, GenerateMoveChunk(2, "left"))
-	assert.Equal(t, []Move{{1, 0}, {1, 0}, {1, 0}, {1, 0}}, GenerateMoveChunk(4, "right"))
+	assert.Equal(t, []board.Move{{0, -1}}, GenerateMoveChunk(1, "up"))
+	assert.Equal(t, []board.Move{{-1, 0}, {-1, 0}}, GenerateMoveChunk(2, "left"))
+	assert.Equal(t, []board.Move{{1, 0}, {1, 0}, {1, 0}, {1, 0}}, GenerateMoveChunk(4, "right"))
 }
 
 func TestDirectionLoop(t *testing.T) {
@@ -29,7 +30,7 @@ func TestDirectionLoop(t *testing.T) {
 func TestGenerateMoves(t *testing.T) {
 	moves := GenerateMoves(3)
 	assert.Equal(t,
-		[]Move{{1,0}, {0, -1}, {-1, 0}},
+		[]board.Move{{1, 0}, {0, -1}, {-1, 0}},
 		moves,
 	)
 }
