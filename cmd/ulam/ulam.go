@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/jsnctl/ulam/board"
-	"github.com/jsnctl/ulam/strategy"
+	"github.com/jsnctl/ulam/pkg/board"
+	"github.com/jsnctl/ulam/pkg/strategy"
 	"image"
 	"image/color"
 	"image/draw"

@@ -1,7 +1,7 @@
 package strategy
 
 import (
-	"github.com/jsnctl/ulam/board"
+	"github.com/jsnctl/ulam/pkg/board"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

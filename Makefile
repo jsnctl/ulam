@@ -1,19 +1,19 @@
 build:
-	go build
+	go build -o ./bin/ulam ./cmd/ulam/ulam.go
 
 test:
 	go test ./...
 
 
 all: build test
-	./ulam
+	./bin/ulam
 	open output.png
 
 
 ulam: build test
-	./ulam ulam
+	./bin/ulam ulam
 	open output.png
 
 langton: build test
-	./ulam langton
+	./bin/ulam langton
 	open output.png

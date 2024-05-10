@@ -1,8 +1,9 @@
 package strategy
 
 import (
-	"github.com/jsnctl/ulam/board"
+	"github.com/jsnctl/ulam/pkg/board"
 	"image/color"
+	"log/slog"
 )
 
 func turnRight(direction string) string {
@@ -34,6 +35,7 @@ func compareColors(left color.Color, right color.Color) bool {
 }
 
 func (s *Strategy) LangtonAnt(steps int) {
+	slog.Info("Running Langton ant...")
 	cursor := board.Cursor{
 		Number: 0,
 		X:      s.Board.Centre.X,

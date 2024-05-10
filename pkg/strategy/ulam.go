@@ -1,11 +1,13 @@
 package strategy
 
 import (
-	"github.com/jsnctl/ulam/board"
+	"github.com/jsnctl/ulam/pkg/board"
 	"image/color"
+	"log/slog"
 )
 
 func (s *Strategy) UlamSpiral() {
+	slog.Info("Running Ulam spiral...")
 	cursor := board.Cursor{
 		Number:  0,
 		X:       s.Board.Centre.X,
